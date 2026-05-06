@@ -1,13 +1,10 @@
-import { Container, Typography, Box, Grid } from '@mui/material';
+import { Container, Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { PetCard } from '../../components/Card/PetCard';
-
-const mockPets = [
-  { id: 1, nombre: 'Max', raza: 'Golden Retriever', estado: 'PERDIDA', ubicacionDesc: 'Plaza de Armas' },
-  { id: 2, nombre: 'Luna', raza: 'Gato Siam茅s', estado: 'ENCONTRADA', ubicacionDesc: 'Av. Providencia' },
-  { id: 3, nombre: 'Rocky', raza: 'Bulldog', estado: 'PERDIDA', ubicacionDesc: 'Parque Bicentenario' },
-];
+import { useGetDashboardQuery } from '../../api/petsApi';
 
 export const Dashboard = () => {
+  const { data: mascotasConsolidadas, error, isLoading } = useGetDashboardQuery();
+
   return (
     <Container>
       <Box py={4}>
@@ -15,16 +12,26 @@ export const Dashboard = () => {
           Dashboard de Esperanza
         </Typography>
         <Typography variant="body1" color="text.secondary" mb={4}>
-          Aqui se listaran las mascotas perdidas y encontradas.
+          Mascotas registradas en tiempo real a través del sistema.
         </Typography>
-
-        <Grid container spacing={3}>
-          {mockPets.map((pet) => (
-            <Grid item xs={12} sm={6} md={4} key={pet.id}>
-              <PetCard pet={pet} />
-            </Grid>
-          ))}
-        </Grid>
+        {isLoading && (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <CircularProgress color="primary" />
+          </Box>
+        )}        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            Ocurrió un error al cargar los datos.
+          </Alert>
+        )}
+        {!isLoading && !error && mascotasConsolidadas && (
+          <Grid container spacing={3}>
+            {mascotasConsolidadas.map((pet, index) => (
+              <Grid item xs={12} sm={6} md={4} key={pet.mascota.id || index}>
+                <PetCard pet={pet} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
     </Container>
   );

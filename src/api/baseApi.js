@@ -1,12 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseUrl = import.meta.env.VITE_BFF_URL || 'http://localhost:8080/api';
-
 export const baseApi = createApi({
-  reducerPath: 'api',
+  reducerPath: 'baseApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl,
+    baseUrl: import.meta.env.VITE_API_BASE_URL,
+
+    prepareHeaders: async (headers) => {
+      const token = await window.Clerk?.session?.getToken();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+
+      return headers;
+    },
   }),
   tagTypes: ['Pet', 'Location'],
-  endpoints: () => ({}), 
+  endpoints: () => ({}),
 });

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: sanos_frontend
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" 
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8082/api/v1
+    depends_on:
+      - sanos-bff-gateway 
+    networks:
+      - sanos-network 
+    restart: always
+networks:
+  sanos-network:
+    driver: bridge

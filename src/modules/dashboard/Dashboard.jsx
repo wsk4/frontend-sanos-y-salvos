@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Container, Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { PetCard } from '../../components/Card/PetCard';
@@ -7,7 +8,7 @@ export const Dashboard = () => {
   const { getToken } = useAuth();
   const [mascotas, setMascotas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -30,6 +31,7 @@ export const Dashboard = () => {
   }, [getToken]);
 
   const adaptarPet = (dto) => ({
+    id: dto.idMascota, 
     estado: dto.estado,
     mascota: {
       nombre: dto.nombre,
@@ -56,11 +58,7 @@ export const Dashboard = () => {
             <CircularProgress color="primary" />
           </Box>
         )}
-        {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {error}
-          </Alert>
-        )}
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
         {!isLoading && !error && (
           <Grid container spacing={3}>
             {mascotas.map((dto) => (

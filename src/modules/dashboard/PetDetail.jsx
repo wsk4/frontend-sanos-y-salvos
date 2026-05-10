@@ -11,13 +11,11 @@ export const PetDetail = () => {
     const navigate = useNavigate();
     const { getToken } = useAuth();
     
-    
     const [pet, setPet] = useState(location.state?.petData || null);
     const [isLoading, setIsLoading] = useState(!location.state?.petData);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        
         if (!pet) {
             const fetchPetDetail = async () => {
                 try {
@@ -28,7 +26,7 @@ export const PetDetail = () => {
                             "X-Tunnel-Skip-Anti-Phish-Prevention": "true" 
                         }
                     });
-                    if (!res.ok) throw new Error("No se pudo conectar con el servidor.");
+                    if (!res.ok) throw new Error("No se pudo obtener el detalle de la mascota.");
                     const data = await res.json();
                     setPet(data);
                 } catch (e) {
@@ -41,75 +39,34 @@ export const PetDetail = () => {
         }
     }, [id, getToken, pet]);
 
-    if (isLoading) return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-            <CircularProgress />
-        </Box>
-    );
+    if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}><CircularProgress /></Box>;
+    if (error && !pet) return <Container sx={{ mt: 4 }}><Alert severity="error">{error}</Alert></Container>;
 
-    
-    const BackButton = () => (
-        <Button 
-            startIcon={<ArrowBackIcon />} 
-            onClick={() => navigate('/dashboard')} 
-            sx={{ mb: 3, fontWeight: 'bold' }}
-        >
-            Volver al Dashboard
-        </Button>
-    );
-
-    if (error && !pet) return (
-        <Container sx={{ mt: 4 }}>
-            <BackButton />
-            <Alert severity="error">{error}</Alert>
-        </Container>
-    );
-
-    if (!pet) return (
-        <Container sx={{ mt: 4 }}>
-            <BackButton />
-            <Alert severity="warning">No se encontraron detalles para esta mascota.</Alert>
-        </Container>
-    );
-
-    
-    const data = pet.mascota ? pet.mascota : pet;
+    const data = pet?.mascota ? pet.mascota : pet;
 
     return (
         <Container sx={{ py: 4 }}>
-            
-            <BackButton />
-
-            <Paper elevation={4} sx={{ p: 4, borderRadius: 3, backgroundColor: '#fdfdfd' }}>
-                <Typography variant="h3" color="primary" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-                    {data.nombre}
+            <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/dashboard')} sx={{ mb: 3 }}>
+                Volver al Dashboard
+            </Button>
+            <Paper elevation={3} sx={{ p: 4, borderRadius: 4 }}>
+                <Typography variant="h3" color="primary" fontWeight="bold" textAlign="center" gutterBottom>
+                    {data?.nombre}
                 </Typography>
-                
-                <Box sx={{ my: 4, display: 'flex', justifyContent: 'center' }}>
-                    <img 
-                        src={formatImageBytes(data.fotoBytes)} 
-                        alt={data.nombre} 
-                        style={{ 
-                            width: '100%', 
-                            maxWidth: '600px', 
-                            maxHeight: '450px', 
-                            objectFit: 'cover', 
-                            borderRadius: '16px',
-                            boxShadow: '0px 4px 20px rgba(0,0,0,0.1)'
-                        }} 
-                    />
+                <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                    <Box component="img" src={formatImageBytes(data?.fotoBytes)} alt={data?.nombre}
+                         sx={{ width: '100%', maxWidth: 500, borderRadius: 4, boxShadow: 2 }} />
                 </Box>
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: '600px', mx: 'auto' }}>
-                    <Typography variant="h5"><strong>Raza:</strong> {data.raza}</Typography>
-                    <Typography variant="h5"><strong>Estado actual:</strong> {data.estado}</Typography>
-                    
-                    {pet.geolocalizacion && (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 500, mx: 'auto' }}>
+                    <Typography variant="h5"><strong>Raza:</strong> {data?.raza}</Typography>
+                    <Typography variant="h5"><strong>Estado:</strong> {data?.estado}</Typography>
+                    <Typography variant="h5"><strong>Tamaño:</strong> {data?.tamano || 'No especificado'}</Typography>
+                    <Typography variant="h5"><strong>Color:</strong> {data?.color || 'No especificado'}</Typography>
+                    {pet?.contactoInfo && <Typography variant="h5"><strong>Contacto:</strong> {pet.contactoInfo}</Typography>}
+                    {pet?.geolocalizacion && (
                         <Box sx={{ mt: 2, p: 2, bgcolor: '#e3f2fd', borderRadius: 2 }}>
-                            <Typography variant="h6" color="primary">Ubicación del reporte:</Typography>
-                            <Typography variant="body1">
-                                Latitud: {pet.geolocalizacion.latitud} | Longitud: {pet.geolocalizacion.longitud}
-                            </Typography>
+                            <Typography variant="subtitle1" color="primary">Ubicación del reporte:</Typography>
+                            <Typography variant="body2">Lat: {pet.geolocalizacion.latitud} | Lon: {pet.geolocalizacion.longitud}</Typography>
                         </Box>
                     )}
                 </Box>

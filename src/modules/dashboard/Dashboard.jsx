@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Container, Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { PetCard } from '../../components/Card/PetCard';
@@ -8,7 +7,7 @@ export const Dashboard = () => {
   const { getToken } = useAuth();
   const [mascotas, setMascotas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -32,12 +31,15 @@ export const Dashboard = () => {
 
   const adaptarPet = (dto) => ({
     id: dto.idMascota, 
-    estado: dto.estado,
+    direccion: dto.direccion,
+    contactoInfo: dto.contactoInfo,
     mascota: {
       nombre: dto.nombre,
       raza: dto.raza,
       estado: dto.estado,
       fotoBytes: dto.fotoBytes ?? null,
+      color: dto.color,
+      tamano: dto.tamano
     },
     geolocalizacion: dto.latitud != null
       ? { latitud: dto.latitud, longitud: dto.longitud }

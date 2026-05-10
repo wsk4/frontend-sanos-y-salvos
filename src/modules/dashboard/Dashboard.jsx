@@ -19,7 +19,6 @@ export const Dashboard = () => {
         );
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
-        console.log('fotoBytes mascota 14:', data.find(d => d.idMascota === 14)?.fotoBytes);
         setMascotas(data);
       } catch (e) {
         setError(e.message);
@@ -47,10 +46,10 @@ export const Dashboard = () => {
     <Container>
       <Box py={4}>
         <Typography variant="h4" color="primary" fontWeight="bold" gutterBottom>
-          Dashboard de Esperanza
+          Reencuentrate con tu mascota
         </Typography>
         <Typography variant="body1" color="text.secondary" mb={4}>
-          Mascotas registradas en tiempo real a través del sistema.
+          Mascotas Perdidas y/o Encontradas en la zona.
         </Typography>
         {isLoading && (
           <Box display="flex" justifyContent="center" mt={4}>

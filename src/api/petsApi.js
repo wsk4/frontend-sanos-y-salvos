@@ -8,7 +8,7 @@ export const petsApi = baseApi.injectEndpoints({
         }),
         reportPet: builder.mutation({
             query: (formData) => ({
-                url: '/mascotas',
+                url: '/bff/v1/mascotas',
                 method: 'POST',
                 body: formData,
             }),

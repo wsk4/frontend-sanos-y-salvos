@@ -19,6 +19,7 @@ export const Dashboard = () => {
         );
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
+        console.log('fotoBytes mascota 14:', data.find(d => d.idMascota === 14)?.fotoBytes);
         setMascotas(data);
       } catch (e) {
         setError(e.message);
@@ -35,7 +36,7 @@ export const Dashboard = () => {
       nombre: dto.nombre,
       raza: dto.raza,
       estado: dto.estado,
-      fotoBytes: dto.fotoUrl ?? null,
+      fotoBytes: dto.fotoBytes ?? null,
     },
     geolocalizacion: dto.latitud != null
       ? { latitud: dto.latitud, longitud: dto.longitud }

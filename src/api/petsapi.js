@@ -3,7 +3,7 @@ import { baseApi } from './baseApi';
 export const petsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getDashboard: builder.query({
-            query: () => '/bff/dashboard',
+            query: () => '/bff/v1/dashboard',
             providesTags: ['Pet'],
         }),
         reportPet: builder.mutation({

@@ -16,6 +16,7 @@ export const ReportForm = () => {
   const [contactoInfo, setContactoInfo] = useState('');
   const [estado, setEstado] = useState('PERDIDA');
   const [foto, setFoto] = useState(null);
+  const [direccion, setDireccion] = useState(''); 
 
   const handleFileChange = (e) => {
     setFoto(e.target.files[0]);
@@ -34,13 +35,15 @@ export const ReportForm = () => {
       estado,
       contactoInfo
     };
-    formData.append(
-      'mascota',
-      new Blob([JSON.stringify(mascotaData)], { type: 'application/json' })
-    );
+
+    formData.append('mascota', JSON.stringify(mascotaData));
+
+    formData.append('direccion', direccion);
+
     if (foto) {
       formData.append('archivo', foto);
     }
+
     try {
       await reportPet(formData).unwrap();
       setTimeout(() => {
@@ -50,6 +53,7 @@ export const ReportForm = () => {
       console.error('Error al registrar la mascota:', error);
     }
   };
+
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 5, p: 4, boxShadow: 3, borderRadius: 2, bgcolor: 'white' }}>
@@ -70,6 +74,7 @@ export const ReportForm = () => {
             Ocurrió un error al registrar la mascota. Verifica la conexión.
           </Alert>
         )}
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -127,7 +132,18 @@ export const ReportForm = () => {
                 onChange={(e) => setContactoInfo(e.target.value)}
               />
             </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Dirección donde fue visto"
+                fullWidth
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+                required
+              />
+            </Grid>
           </Grid>
+
           <Box sx={{ mt: 3, mb: 3, p: 2, border: '1px dashed #ccc', borderRadius: 1 }}>
             <Typography variant="body2" color="text.secondary" gutterBottom>
               Sube una foto clara de la mascota:
@@ -139,6 +155,7 @@ export const ReportForm = () => {
               required
             />
           </Box>
+
           <Button
             type="submit"
             variant="contained"

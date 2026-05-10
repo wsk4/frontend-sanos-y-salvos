@@ -5,7 +5,6 @@ import { useGetDashboardQuery } from '../../api/petsApi';
 export const Dashboard = () => {
   const { data: mascotas, error, isLoading } = useGetDashboardQuery();
 
-  // Adapta el DTO plano del BFF a la forma que espera PetCard
   const adaptarPet = (dto) => ({
     estado: dto.estado,
     mascota: {

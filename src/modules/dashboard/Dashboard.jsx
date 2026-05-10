@@ -35,7 +35,7 @@ export const Dashboard = () => {
       nombre: dto.nombre,
       raza: dto.raza,
       estado: dto.estado,
-      fotoBytes: dto.fotoUrl ?? null,
+      fotoBytes: dto.fotoBytes ?? null,
     },
     geolocalizacion: dto.latitud != null
       ? { latitud: dto.latitud, longitud: dto.longitud }
@@ -46,10 +46,10 @@ export const Dashboard = () => {
     <Container>
       <Box py={4}>
         <Typography variant="h4" color="primary" fontWeight="bold" gutterBottom>
-          Dashboard de Esperanza
+          Reencuentrate con tu mascota
         </Typography>
         <Typography variant="body1" color="text.secondary" mb={4}>
-          Mascotas registradas en tiempo real a través del sistema.
+          Mascotas Perdidas y/o Encontradas en la zona.
         </Typography>
         {isLoading && (
           <Box display="flex" justifyContent="center" mt={4}>

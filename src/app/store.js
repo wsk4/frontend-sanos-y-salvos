@@ -1,8 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { baseApi } from '../api/baseApi';
+import authReducer from './authSlice';
 
 export const store = configureStore({
   reducer: {
-    // Reducer temporal para evitar el error de "valid reducer"
-    ui: (state = {}) => state, 
+    [baseApi.reducerPath]: baseApi.reducer,
+    auth: authReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(baseApi.middleware),
+  devTools: import.meta.env.MODE !== 'production',
 });

@@ -1,46 +1,69 @@
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 export const Navbar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const isActive = (path) => location.pathname === path;
+
+    const buttonStyle = (path) => ({
+        color: 'white',
+        fontWeight: isActive(path) ? 'bold' : 'normal',
+        borderBottom: isActive(path) ? '2px solid white' : 'none',
+        borderRadius: 0,
+        mx: 1,
+        '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' }
+    });
 
     return (
-        <AppBar position="static" color="primary" elevation={1}>
+        <AppBar position="sticky" color="primary" elevation={3}>
             <Toolbar>
                 <Typography
                     variant="h5"
                     component="div"
-                    sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                    sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0 }}
                     onClick={() => navigate('/dashboard')}
                 >
                     🐾 Sanos y Salvos
                 </Typography>
 
-                <Box sx={{ flexGrow: 1 }} />
-
-                <Button color="inherit" onClick={() => navigate('/dashboard')}>Dashboard</Button>
-                <Button color="inherit" onClick={() => navigate('/mapa')}>Radar de Huellas</Button>
-
-                <SignedIn>
-                    <Button
-                        variant="contained"
-                        sx={{ ml: 2, mr: 2, bgcolor: 'white', color: 'primary.main', '&:hover': { bgcolor: 'grey.100' } }}
-                        onClick={() => navigate('/reportar')}
-                    >
-                        Reportar Mascota
+                <Box sx={{ ml: 4, display: 'flex', flexGrow: 1 }}>
+                    <Button sx={buttonStyle('/dashboard')} onClick={() => navigate('/dashboard')}>
+                        Dashboard
                     </Button>
-                    <UserButton afterSignOutUrl="/dashboard" />
-                </SignedIn>
+                    <Button sx={buttonStyle('/mapa')} onClick={() => navigate('/mapa')}>
+                        Radar de Huellas
+                    </Button>
+                </Box>
 
-                <SignedOut>
-                    <SignInButton mode="modal">
-                        <Button variant="outlined" sx={{ ml: 2, color: 'white', borderColor: 'white' }}>
-                            Iniciar Sesión
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <SignedIn>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                ml: 2, mr: 2,
+                                bgcolor: 'white',
+                                color: 'primary.main',
+                                fontWeight: 'bold',
+                                '&:hover': { bgcolor: 'grey.100' }
+                            }}
+                            onClick={() => navigate('/reportar')}
+                        >
+                            Reportar Mascota
                         </Button>
-                    </SignInButton>
-                </SignedOut>
+                        <UserButton afterSignOutUrl="/dashboard" />
+                    </SignedIn>
 
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <Button variant="outlined" sx={{ ml: 2, color: 'white', borderColor: 'white' }}>
+                                Iniciar Sesión
+                            </Button>
+                        </SignInButton>
+                    </SignedOut>
+                </Box>
             </Toolbar>
         </AppBar>
     );

@@ -1,10 +1,13 @@
-import { Container, Typography, Box, Paper, Grid, Chip, Button, Divider, CircularProgress, Alert } from '@mui/material';
+import { Container, Typography, Box, Paper, Grid, Chip, Button, Divider, CircularProgress, Alert, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetPetByIdQuery } from '../../api/petsApi';
 import { useAuth } from '@clerk/clerk-react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PetsIcon from '@mui/icons-material/Pets';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import StraightenIcon from '@mui/icons-material/Straighten';
 import { formatImageBytes } from '../../utils/imageUtils';
 
 export const PetDetail = () => {
@@ -14,6 +17,7 @@ export const PetDetail = () => {
     const { isSignedIn } = useAuth();
 
     const petFromState = location.state?.petData;
+
     const { data: petFromApi, isLoading, error } = useGetPetByIdQuery(id, {
         skip: !!petFromState,
     });
@@ -21,40 +25,102 @@ export const PetDetail = () => {
     const pet = petFromState || petFromApi;
 
     if (isLoading) return <Box display="flex" justifyContent="center" py={10}><CircularProgress /></Box>;
-    if (error || !pet) return (
-        <Container maxWidth="md" sx={{ py: 8 }}>
-            <Alert severity="error">No se encontró la mascota.</Alert>
-            <Button onClick={() => navigate('/dashboard')}>Volver al Dashboard</Button>
-        </Container>
-    );
+
+    if (error || !pet) {
+        return (
+            <Container maxWidth="md" sx={{ py: 8 }}>
+                <Alert severity="error">No pudimos encontrar la información detallada.</Alert>
+                <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/dashboard')} sx={{ mt: 2 }}>
+                    Volver al Dashboard
+                </Button>
+            </Container>
+        );
+    }
 
     const { mascota, direccion, contactoInfo } = pet;
 
     return (
         <Container maxWidth="md" sx={{ py: 4 }}>
-            <Button startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} sx={{ mb: 3 }}>Volver</Button>
-            <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
+            <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
+                sx={{ mb: 2, textTransform: 'none' }}
+            >
+                Volver atrás
+            </Button>
+
+            <Paper elevation={4} sx={{ borderRadius: 4, overflow: 'hidden', bgcolor: 'white' }}>
                 <Grid container>
                     <Grid item xs={12} md={6}>
-                        <Box component="img" src={formatImageBytes(mascota.fotoBytes)} alt={mascota.nombre} sx={{ width: '100%', height: '100%', minHeight: 400, objectFit: 'cover' }} />
+                        <Box
+                            component="img"
+                            src={formatImageBytes(mascota.fotoBytes)}
+                            alt={mascota.nombre}
+                            sx={{
+                                width: '100%',
+                                height: { xs: 300, md: '100%' },
+                                minHeight: { md: 500 },
+                                objectFit: 'cover'
+                            }}
+                        />
                     </Grid>
-                    <Grid item xs={12} md={6} p={4}>
-                        <Typography variant="h3" fontWeight="bold" color="primary">{mascota.nombre}</Typography>
-                        <Chip label={mascota.estado} color={mascota.estado === 'PERDIDA' ? 'error' : 'success'} sx={{ mt: 1 }} />
-                        <Divider sx={{ my: 3 }} />
-                        <Box mb={3}>
-                            <Typography variant="subtitle1" fontWeight="bold"><LocationOnIcon sx={{ mr: 1, verticalAlign: 'middle' }} /> Ubicación</Typography>
-                            <Typography variant="body1" color="text.secondary">{direccion}</Typography>
-                        </Box>
-                        <Box mb={4}>
-                            <Typography variant="subtitle1" fontWeight="bold"><ContactPhoneIcon sx={{ mr: 1, verticalAlign: 'middle' }} /> Información de Contacto</Typography>
-                            {isSignedIn ? (
-                                <Typography variant="h5" color="secondary" fontWeight="bold" sx={{ mt: 1 }}>
-                                    {contactoInfo || 'No especificada'}
+
+                    <Grid item xs={12} md={6}>
+                        <Box p={4}>
+                            <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
+                                <Typography variant="h3" fontWeight="bold" color="primary">
+                                    {mascota.nombre || 'Sin nombre'}
                                 </Typography>
-                            ) : (
-                                <Alert severity="info" sx={{ mt: 1 }}>Inicia sesión para ver los datos de contacto.</Alert>
-                            )}
+                                <Chip
+                                    label={mascota.estado}
+                                    color={mascota.estado === 'PERDIDA' ? 'error' : 'success'}
+                                    sx={{ fontWeight: 'bold' }}
+                                />
+                            </Box>
+
+                            <Typography variant="h6" color="text.secondary" gutterBottom>
+                                Información General
+                            </Typography>
+
+                            <Divider sx={{ mb: 2 }} />
+
+                            <List sx={{ mb: 2 }}>
+                                <ListItem disableGutters>
+                                    <ListItemIcon><PetsIcon color="primary" /></ListItemIcon>
+                                    <ListItemText primary="Raza" secondary={mascota.raza || 'No especificada'} />
+                                </ListItem>
+                                <ListItem disableGutters>
+                                    <ListItemIcon><ColorLensIcon color="primary" /></ListItemIcon>
+                                    <ListItemText primary="Color" secondary={mascota.color || 'No especificado'} />
+                                </ListItem>
+                                <ListItem disableGutters>
+                                    <ListItemIcon><StraightenIcon color="primary" /></ListItemIcon>
+                                    <ListItemText primary="Tamaño" secondary={mascota.tamano || 'No especificado'} />
+                                </ListItem>
+                            </List>
+
+                            <Typography variant="subtitle1" fontWeight="bold" display="flex" alignItems="center" mb={1}>
+                                <LocationOnIcon sx={{ mr: 1 }} color="primary" /> Ubicación del reporte
+                            </Typography>
+                            <Typography variant="body1" color="text.secondary" mb={3}>
+                                {direccion || 'Dirección no disponible'}
+                            </Typography>
+
+                            <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2, border: '1px solid', borderColor: 'grey.200' }}>
+                                <Typography variant="subtitle1" fontWeight="bold" display="flex" alignItems="center" mb={1}>
+                                    <ContactPhoneIcon sx={{ mr: 1 }} color="primary" /> Datos de Contacto
+                                </Typography>
+
+                                {isSignedIn ? (
+                                    <Typography variant="h5" color="secondary" fontWeight="bold">
+                                        {contactoInfo || 'Información no proporcionada'}
+                                    </Typography>
+                                ) : (
+                                    <Alert severity="info" sx={{ mt: 1 }}>
+                                        Debes iniciar sesión para contactar al rescatista.
+                                    </Alert>
+                                )}
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>

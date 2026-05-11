@@ -34,7 +34,7 @@ export const MapView = () => {
         <Paper
           elevation={2}
           sx={{
-            height: '50vh',
+            height: '70vh',
             borderRadius: 3,
             overflow: 'hidden',
             border: '2px solid white'

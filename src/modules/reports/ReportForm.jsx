@@ -82,6 +82,14 @@ export const ReportForm = () => {
             <Grid item xs={12} sm={6}>
               <TextField label="Raza" fullWidth name="raza" value={formData.raza} onChange={handleChange} required />
             </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField label="Color" fullWidth name="color" value={formData.color} onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Tamaño (Ej. Pequeño, Grande)" fullWidth name="tamano" value={formData.tamano} onChange={handleChange} />
+            </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
                 <InputLabel>Estado</InputLabel>
@@ -101,6 +109,8 @@ export const ReportForm = () => {
                 required
               />
             </Grid>
+
+            {/* Fila 4 */}
             <Grid item xs={12}>
               <TextField label="Dirección donde fue visto" fullWidth name="direccion" value={formData.direccion} onChange={handleChange} required />
             </Grid>

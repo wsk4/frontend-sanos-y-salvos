@@ -7,13 +7,12 @@ import { formatImageBytes } from '../../utils/imageUtils';
 import 'leaflet/dist/leaflet.css';
 
 export const MapView = () => {
-  const { data: mascotasConsolidadas, isLoading, error } = useGetDashboardQuery();
+  const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
 
   useEffect(() => {
-    fixLeafletIcon(); 
+    fixLeafletIcon();
   }, []);
 
-  
   const position = [-33.4489, -70.6693];
 
   return (
@@ -38,36 +37,38 @@ export const MapView = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
 
-              {mascotasConsolidadas?.map((item) => {
+              {mascotas.map((item) => {
                 if (!item.geolocalizacion) return null;
 
+                const { mascota, geolocalizacion, direccion, id } = item;
+
                 return (
-                  <Marker 
-                    key={item.mascota.id} 
-                    position={[item.geolocalizacion.latitud, item.geolocalizacion.longitud]}
+                  <Marker
+                    key={id}
+                    position={[geolocalizacion.latitud, geolocalizacion.longitud]}
                     icon={pawIcon}
                   >
                     <Popup>
                       <Box sx={{ textAlign: 'center', p: 1 }}>
-                        <img 
-                          src={formatImageBytes(item.mascota.fotoBytes)} 
-                          alt={item.mascota.nombre} 
-                          style={{ width: '100px', borderRadius: '8px', marginBottom: '8px' }} 
+                        <img
+                          src={formatImageBytes(mascota.fotoBytes)}
+                          alt={mascota.nombre}
+                          style={{ width: '100px', borderRadius: '8px', marginBottom: '8px' }}
                         />
                         <Typography variant="subtitle1" fontWeight="bold">
-                          {item.mascota.nombre}
+                          {mascota.nombre}
                         </Typography>
-                        <Chip 
-                          label={item.mascota.estado} 
-                          size="small" 
-                          color={item.mascota.estado === 'PERDIDA' ? 'error' : 'success'} 
+                        <Chip
+                          label={mascota.estado}
+                          size="small"
+                          color={mascota.estado === 'PERDIDA' ? 'error' : 'success'}
                           sx={{ mb: 1 }}
                         />
                         <Typography variant="body2">
-                          {item.mascota.raza}
+                          {mascota.raza}
                         </Typography>
                         <Typography variant="caption" display="block" sx={{ mt: 1, color: 'gray' }}>
-                          Reportado en: {item.geolocalizacion.direccionDesc}
+                          Reportado en: {direccion}
                         </Typography>
                       </Box>
                     </Popup>

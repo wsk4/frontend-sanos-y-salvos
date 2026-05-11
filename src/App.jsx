@@ -4,7 +4,7 @@ import { AppRouter } from './routes/AppRouter';
 import { TokenSync } from './components/Auth/TokenSync';
 import { Navbar } from './components/Navbar/Navbar';
 import { theme } from './assets/styles/theme';
-import './index.css'; r
+import './index.css';
 
 function App() {
   return (

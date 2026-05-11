@@ -16,69 +16,74 @@ export const MapView = () => {
   const position = [-33.4489, -70.6693];
 
   return (
-    <Container maxWidth="xl">
-      <Box py={4}>
-        <Typography variant="h4" color="primary" fontWeight="bold" gutterBottom>
+    <Container maxWidth="lg" sx={{ py: 2 }}>
+      <Box mb={2}>
+        <Typography variant="h5" color="primary" fontWeight="bold">
           📍 Radar de Huellas
         </Typography>
-        <Typography variant="body1" color="text.secondary" mb={3}>
-          Visualiza en tiempo real las zonas con reportes activos de mascotas.
+        <Typography variant="caption" color="text.secondary">
+          Zonas con reportes activos de mascotas.
         </Typography>
-
-        {isLoading ? (
-          <Box display="flex" justifyContent="center" py={10}><CircularProgress /></Box>
-        ) : error ? (
-          <Typography color="error">Error al cargar los puntos geográficos.</Typography>
-        ) : (
-          <Paper elevation={4} sx={{ height: '70vh', borderRadius: 4, overflow: 'hidden', border: '4px solid white' }}>
-            <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-
-              {mascotas.map((item) => {
-                if (!item.geolocalizacion) return null;
-
-                const { mascota, geolocalizacion, direccion, id } = item;
-
-                return (
-                  <Marker
-                    key={id}
-                    position={[geolocalizacion.latitud, geolocalizacion.longitud]}
-                    icon={pawIcon}
-                  >
-                    <Popup>
-                      <Box sx={{ textAlign: 'center', p: 1 }}>
-                        <img
-                          src={formatImageBytes(mascota.fotoBytes)}
-                          alt={mascota.nombre}
-                          style={{ width: '100px', borderRadius: '8px', marginBottom: '8px' }}
-                        />
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          {mascota.nombre}
-                        </Typography>
-                        <Chip
-                          label={mascota.estado}
-                          size="small"
-                          color={mascota.estado === 'PERDIDA' ? 'error' : 'success'}
-                          sx={{ mb: 1 }}
-                        />
-                        <Typography variant="body2">
-                          {mascota.raza}
-                        </Typography>
-                        <Typography variant="caption" display="block" sx={{ mt: 1, color: 'gray' }}>
-                          Reportado en: {direccion}
-                        </Typography>
-                      </Box>
-                    </Popup>
-                  </Marker>
-                );
-              })}
-            </MapContainer>
-          </Paper>
-        )}
       </Box>
+
+      {isLoading ? (
+        <Box display="flex" justifyContent="center" py={5}><CircularProgress /></Box>
+      ) : error ? (
+        <Typography color="error" variant="body2">Error al cargar los puntos geográficos.</Typography>
+      ) : (
+        <Paper
+          elevation={2}
+          sx={{
+            height: '50vh',
+            borderRadius: 3,
+            overflow: 'hidden',
+            border: '2px solid white'
+          }}
+        >
+          <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
+            <TileLayer
+              attribution='&copy; OpenStreetMap'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            {mascotas.map((item) => {
+              if (!item.geolocalizacion) return null;
+
+              const { mascota, geolocalizacion, direccion, id } = item;
+
+              return (
+                <Marker
+                  key={id}
+                  position={[geolocalizacion.latitud, geolocalizacion.longitud]}
+                  icon={pawIcon}
+                >
+                  <Popup>
+                    <Box sx={{ textAlign: 'center', width: 120 }}> {/* Ancho de popup controlado */}
+                      <img
+                        src={formatImageBytes(mascota.fotoBytes)}
+                        alt={mascota.nombre}
+                        style={{ width: '100%', borderRadius: '4px', marginBottom: '4px' }}
+                      />
+                      <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.2}>
+                        {mascota.nombre}
+                      </Typography>
+                      <Chip
+                        label={mascota.estado}
+                        size="small"
+                        color={mascota.estado === 'PERDIDA' ? 'error' : 'success'}
+                        sx={{ height: 16, fontSize: '10px', my: 0.5 }}
+                      />
+                      <Typography variant="caption" display="block" sx={{ color: 'gray', fontSize: '10px' }}>
+                        {direccion}
+                      </Typography>
+                    </Box>
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MapContainer>
+        </Paper>
+      )}
     </Container>
   );
 };

@@ -39,7 +39,6 @@ export const ReportForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = new FormData();
 
     const mascotaData = {
@@ -73,7 +72,7 @@ export const ReportForm = () => {
         </Typography>
 
         {isSuccess && <Alert severity="success" sx={{ mb: 2 }}>¡Reporte creado! Redirigiendo...</Alert>}
-        {isError && <Alert severity="error" sx={{ mb: 2 }}>Error al enviar. Revisa los datos.</Alert>}
+        {isError && <Alert severity="error" sx={{ mb: 2 }}>Error al enviar. Revisa los datos e intenta nuevamente.</Alert>}
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -93,10 +92,17 @@ export const ReportForm = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField label="Teléfono" fullWidth name="contactoInfo" value={formData.contactoInfo} onChange={handleChange} />
+              <TextField
+                label="Contacto (Teléfono / Email)"
+                fullWidth
+                name="contactoInfo"
+                value={formData.contactoInfo}
+                onChange={handleChange}
+                required
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextField label="Dirección" fullWidth name="direccion" value={formData.direccion} onChange={handleChange} required />
+              <TextField label="Dirección donde fue visto" fullWidth name="direccion" value={formData.direccion} onChange={handleChange} required />
             </Grid>
           </Grid>
 

@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useGetPetByIdQuery } from '../../api/petsApi';
 import { useAuth } from '@clerk/clerk-react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { formatImageBytes } from '../../utils/imageUtils';
 
@@ -24,7 +24,7 @@ export const PetDetail = () => {
     if (error || !pet) return (
         <Container maxWidth="md" sx={{ py: 8 }}>
             <Alert severity="error">No se encontró la mascota.</Alert>
-            <Button onClick={() => navigate('/dashboard')}>Volver</Button>
+            <Button onClick={() => navigate('/dashboard')}>Volver al Dashboard</Button>
         </Container>
     );
 
@@ -47,14 +47,13 @@ export const PetDetail = () => {
                             <Typography variant="body1" color="text.secondary">{direccion}</Typography>
                         </Box>
                         <Box mb={4}>
-                            <Typography variant="subtitle1" fontWeight="bold"><PhoneIcon sx={{ mr: 1, verticalAlign: 'middle' }} /> Contacto</Typography>
+                            <Typography variant="subtitle1" fontWeight="bold"><ContactPhoneIcon sx={{ mr: 1, verticalAlign: 'middle' }} /> Información de Contacto</Typography>
                             {isSignedIn ? (
-                                <>
-                                    <Typography variant="h5" color="secondary" fontWeight="bold">{contactoInfo || 'No disponible'}</Typography>
-                                    <Button variant="contained" fullWidth href={`tel:${contactoInfo}`} disabled={!contactoInfo} sx={{ mt: 2 }}>Llamar</Button>
-                                </>
+                                <Typography variant="h5" color="secondary" fontWeight="bold" sx={{ mt: 1 }}>
+                                    {contactoInfo || 'No especificada'}
+                                </Typography>
                             ) : (
-                                <Alert severity="info" sx={{ mt: 1 }}>Inicia sesión para ver el contacto.</Alert>
+                                <Alert severity="info" sx={{ mt: 1 }}>Inicia sesión para ver los datos de contacto.</Alert>
                             )}
                         </Box>
                     </Grid>

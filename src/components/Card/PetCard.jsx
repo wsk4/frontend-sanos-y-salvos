@@ -8,11 +8,7 @@ export const PetCard = ({ pet }) => {
     const isLost = mascota?.estado === 'PERDIDA';
 
     return (
-        /* MEJORAS ESTÉTICAS APLICADAS EN EL OBJETO sx:
-          - Border radius consistente de 14px (Rango exigido: 12-16px).
-          - Sombra suave: box-shadow con opacidad de 0.08.
-          - Hover effect: micro-interacción translateY con transition de 200ms.
-        */
+        
         <Card 
             sx={{ 
                 width: '100%',
@@ -29,7 +25,7 @@ export const PetCard = ({ pet }) => {
                 }
             }}
         >
-            {/* Controlamos que la imagen se adapte fluidamente y no se deforme */}
+            
             <CardMedia
                 component="img"
                 height="200"
@@ -38,15 +34,15 @@ export const PetCard = ({ pet }) => {
                 sx={{ objectFit: 'cover', maxWidth: '100%' }}
             />
             
-            {/* Spacing interno con padding consistente */}
+            
             <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2.5 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, gap: 1 }}>
-                    {/* Control de desborde con elipsis si el nombre de la mascota es muy largo */}
+                    
                     <Typography 
                         variant="h6" 
                         fontWeight="bold"
                         sx={{
-                            fontSize: 'clamp(1.1rem, 2vw, 1.25rem)', /* Tipografía fluida */
+                            fontSize: 'clamp(1.1rem, 2vw, 1.25rem)', 
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis'
@@ -62,7 +58,7 @@ export const PetCard = ({ pet }) => {
                     />
                 </Box>
 
-                {/* Control de elipsis para la raza */}
+                
                 <Typography 
                     variant="body2" 
                     color="text.secondary" 
@@ -76,7 +72,7 @@ export const PetCard = ({ pet }) => {
                     <strong>Raza:</strong> {mascota?.raza || 'No especificada'}
                 </Typography>
 
-                {/* Control de desborde multilínea (máximo 2 líneas) para direcciones largas */}
+                
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', color: 'text.secondary', mb: 2.5, flexGrow: 1 }}>
                     <LocationOnIcon fontSize="small" color="primary" sx={{ mr: 0.5, mt: 0.3 }} />
                     <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -101,9 +97,7 @@ export const PetCard = ({ pet }) => {
                     </Box>
                 </Box>
 
-                {/* MEJORA TOUCH-FRIENDLY REQUERIDA:
-                  Se fuerza una altura mínima estricta (minHeight) de 44px para un área de clic óptima en móviles.
-                */}
+               
                 <Button 
                     component={Link} 
                     to={`/mascotas/${id}`} 

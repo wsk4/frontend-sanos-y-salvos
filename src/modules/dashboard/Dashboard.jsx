@@ -1,4 +1,4 @@
-import { Container, Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
+import { Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { PetCard } from '../../components/Card/PetCard';
 import { useGetDashboardQuery } from '../../api/petsApi';
 
@@ -6,7 +6,8 @@ export const Dashboard = () => {
   const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
 
   return (
-    <Container maxWidth={false} sx={{ py: 4, px: { xs: 2, md: 6 } }}>
+    /* Usamos Box con width: '100%' en lugar de Container para asegurar pantalla completa */
+    <Box sx={{ width: '100%', py: 4, px: { xs: 2, sm: 4, md: 6, lg: 8 } }}>
       <Box mb={4}>
         <Typography variant="h4" color="primary" fontWeight="bold">
           Reencuentrate con tu mascota
@@ -28,6 +29,6 @@ export const Dashboard = () => {
           ))}
         </Grid>
       )}
-    </Container>
+    </Box>
   );
 };

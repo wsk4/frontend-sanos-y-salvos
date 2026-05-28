@@ -12,16 +12,24 @@ function App() {
       <CssBaseline />
 
       <BrowserRouter>
+        {/* Nos aseguramos de que el Box base ocupe siempre el 100% del ancho de la pantalla */}
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
+          width: '100%',
           bgcolor: 'background.default'
         }}>
 
           <TokenSync />
           <Navbar />
-          <main className="responsive-container">
+          
+          {/* CAMBIO CRUCIAL:
+              Eliminamos la clase "responsive-container" que bloqueaba la grilla.
+              Usamos estilos en línea para que este contenedor herede el 100% del ancho 
+              y permita a los componentes internos (Dashboard) ser responsivos.
+          */}
+          <main style={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
             <AppRouter />
           </main>
 

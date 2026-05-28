@@ -6,7 +6,7 @@ export const Dashboard = () => {
   const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
 
   return (
-    /* Usamos Box con width: '100%' en lugar de Container para asegurar pantalla completa */
+
     <Box sx={{ width: '100%', py: 4, px: { xs: 2, sm: 4, md: 6, lg: 8 } }}>
       <Box mb={4}>
         <Typography variant="h4" color="primary" fontWeight="bold">

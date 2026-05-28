@@ -12,16 +12,20 @@ function App() {
       <CssBaseline />
 
       <BrowserRouter>
+       
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
+          width: '100%',
           bgcolor: 'background.default'
         }}>
 
           <TokenSync />
           <Navbar />
-          <main className="responsive-container">
+          
+          
+          <main style={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column' }}>
             <AppRouter />
           </main>
 

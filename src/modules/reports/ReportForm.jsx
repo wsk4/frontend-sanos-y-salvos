@@ -125,13 +125,19 @@ export class ReportForm extends Component {
               </Grid>
               {/* Tamaño */}
               <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Tamaño (Ej. Pequeño, Grande)"
-                  fullWidth
-                  name="tamano"
-                  value={formData.tamano}
-                  onChange={this.handleChange}
-                />
+                <FormControl fullWidth required>
+                  <InputLabel>Tamaño</InputLabel>
+                  <Select
+                    name="tamano"
+                    value={formData.tamano}
+                    label="Tamaño"
+                    onChange={this.handleChange}
+                  >
+                    <MenuItem value="PEQUEÑO">Pequeño</MenuItem>
+                    <MenuItem value="MEDIANO">Mediano</MenuItem>
+                    <MenuItem value="GRANDE">Grande</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               {/* Estado */}
               <Grid item xs={12} sm={6}>

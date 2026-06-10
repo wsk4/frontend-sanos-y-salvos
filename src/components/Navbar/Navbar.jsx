@@ -43,7 +43,7 @@ export const Navbar = () => {
 
                 <Box sx={{ ml: 4, display: 'flex', flexGrow: 1 }}>
                     <Button sx={buttonStyle('/dashboard')} onClick={() => navigate('/dashboard')}>
-                        Dashboard
+                        Inicio
                     </Button>
                     <Button sx={buttonStyle('/mapa')} onClick={() => navigate('/mapa')}>
                         Radar de Huellas

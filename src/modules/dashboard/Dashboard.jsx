@@ -1,29 +1,48 @@
 import { Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { PetCard } from '../../components/Card/PetCard';
 import { useGetDashboardQuery } from '../../api/petsApi';
+import '../../assets/styles/Dashboard.css';
 
 export const Dashboard = () => {
   const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
 
   return (
-
-    <Box sx={{ width: '100%', py: 4, px: { xs: 2, sm: 4, md: 6, lg: 8 } }}>
-      <Box mb={4}>
-        <Typography variant="h4" color="primary" fontWeight="bold">
+    <Box className="dashboard-container">
+      <Box className="dashboard-header">
+        <Typography
+          variant="h4"
+          color="primary"
+          fontWeight="bold"
+          className="dashboard-title"
+        >
           Reencuentrate con tu mascota
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          className="dashboard-subtitle"
+        >
           Mascotas Perdidas y/o Encontradas en la zona.
         </Typography>
       </Box>
 
-      {isLoading && <Box display="flex" justifyContent="center" py={10}><CircularProgress /></Box>}
-      {error && <Alert severity="error">Error de conexión.</Alert>}
+      {isLoading && (
+        <Box className="dashboard-loading">
+          <CircularProgress />
+        </Box>
+      )}
+
+      {error && (
+        <Alert severity="error" className="dashboard-alert">
+          No pudimos conectarnos con el servidor en este momento. Verifica tu conexión o inténtalo nuevamente en unos minutos.
+        </Alert>
+      )}
 
       {!isLoading && !error && (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className="dashboard-grid">
           {mascotas.map((pet) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={pet.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={pet.id}>
               <PetCard pet={pet} />
             </Grid>
           ))}

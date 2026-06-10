@@ -1,0 +1,130 @@
+.mapview-container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.mapview-header {
+    margin: 0 auto 24px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+}
+
+.mapview-title {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    word-break: break-word;
+    margin-bottom: 8px;
+}
+
+.mapview-subtitle {
+    display: block;
+    margin-top: 0;
+    font-size: 1rem;
+    line-height: 2.0
+}
+
+.mapview-loading {
+    display: flex;
+    justify-content: center;
+    padding: 80px 0;
+}
+
+.mapview-alert {
+    margin-bottom: 16px;
+}
+
+.mapview-error-box {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mapview-retry-button {
+    text-transform: none;
+    width: fit-content;
+    align-self: center;
+}
+
+.mapview-paper {
+    height: 60vh;
+    min-height: 420px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #eeeeee;
+}
+
+.mapview-map {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.mapview-popup {
+    text-align: center;
+    width: 140px;
+}
+
+.mapview-popup-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.mapview-popup-chip {
+    height: 20px;
+    font-size: 10px;
+    margin: 8px 0;
+}
+
+@media (max-width: 599px) {
+    .mapview-container {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .mapview-header {
+        margin-bottom: 20px;
+        max-width: 100%;
+    }
+
+    .mapview-title {
+        font-size: 2rem;
+    }
+
+    .mapview-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .mapview-paper {
+        height: 55vh;
+        min-height: 360px;
+    }
+}
+
+@media (min-width: 600px) {
+    .mapview-title {
+        font-size: 2.8rem;
+    }
+
+    .mapview-subtitle {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 900px) {
+    .mapview-paper {
+        height: 65vh;
+    }
+
+    .mapview-title {
+        font-size: 3.4rem;
+    }
+
+    .mapview-subtitle {
+        font-size: 1.2rem;
+    }
+}

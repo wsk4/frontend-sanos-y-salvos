@@ -1,77 +1,73 @@
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+// src/components/Navbar/Navbar.jsx
+import { AppBar, Toolbar, Typography, Button, Box, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
-// Se importa la imagen respetando las minúsculas de la extensión
 import logoSanosYSalvos from '../../assets/SANOS_Y_SALVOS.webp';
+import '../../assets/styles/Navbar.css';
 
 export const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    
+    // Hooks para detectar si la pantalla es tamaño 'sm' (móvil, menor a 600px)
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const isActive = (path) => location.pathname === path;
 
-    const buttonStyle = (path) => ({
-        color: 'white',
-        fontWeight: isActive(path) ? 'bold' : 'normal',
-        borderBottom: isActive(path) ? '2px solid white' : 'none',
-        borderRadius: 0,
-        mx: 1,
-        '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.1)' }
-    });
-
     return (
         <AppBar position="sticky" color="primary" elevation={3}>
-            {/* El Toolbar se mantiene tal cual estaba originalmente para no perder responsividad */}
-            <Toolbar>
+            <Toolbar className="navbar-toolbar">
                 <Typography
-                    variant="h5"
+                    variant="h6"
                     component="div"
-                    // Se agregó 'gap: 1' al final del sx para separar un poco la imagen del texto
-                    sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, gap: 1 }}
+                    className="navbar-logo-container"
                     onClick={() => navigate('/dashboard')}
                 >
-                    {/* Aquí se inserta el logo reemplazando el emoji */}
                     <Box 
                         component="img"
                         src={logoSanosYSalvos}
-                        alt="Logo de Masca"
-                        sx={{ height: 60, width: 'auto' }} 
+                        alt="Logo de Sanos y Salvos"
+                        className="navbar-logo-img"
                     />
-                    Sanos y Salvos
+                    {/* Ocultamos el texto del título en pantallas pequeñas para ahorrar espacio */}
+                    {!isMobile && <span className="navbar-title">Sanos y Salvos</span>}
                 </Typography>
 
-                <Box sx={{ ml: 4, display: 'flex', flexGrow: 1 }}>
-                    <Button sx={buttonStyle('/dashboard')} onClick={() => navigate('/dashboard')}>
+                <Box className="navbar-links-container">
+                    <Button 
+                        className={`navbar-link-button ${isActive('/dashboard') ? 'active' : ''}`}
+                        onClick={() => navigate('/dashboard')}
+                    >
                         Inicio
                     </Button>
-                    <Button sx={buttonStyle('/mapa')} onClick={() => navigate('/mapa')}>
-                        Radar de Huellas
+                    <Button 
+                        className={`navbar-link-button ${isActive('/mapa') ? 'active' : ''}`}
+                        onClick={() => navigate('/mapa')}
+                    >
+                        {/* Texto dinámico dependiendo del tamaño de pantalla */}
+                        {isMobile ? 'Radar' : 'Radar de Huellas'}
                     </Button>
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box className="navbar-actions-container">
                     <SignedIn>
                         <Button
                             variant="contained"
-                            sx={{
-                                ml: 2, mr: 2,
-                                bgcolor: 'white',
-                                color: 'primary.main',
-                                fontWeight: 'bold',
-                                '&:hover': { bgcolor: 'grey.100' }
-                            }}
+                            className="navbar-report-button"
                             onClick={() => navigate('/reportar')}
                         >
-                            Reportar Mascota
+                            {/* Texto dinámico */}
+                            {isMobile ? 'Reportar' : 'Reportar Mascota'}
                         </Button>
                         <UserButton afterSignOutUrl="/dashboard" />
                     </SignedIn>
 
                     <SignedOut>
                         <SignInButton mode="modal">
-                            <Button variant="outlined" sx={{ ml: 2, color: 'white', borderColor: 'white' }}>
-                                Iniciar Sesión
+                            <Button variant="outlined" className="navbar-login-button">
+                                {isMobile ? 'Ingresar' : 'Iniciar Sesión'}
                             </Button>
                         </SignInButton>
                     </SignedOut>

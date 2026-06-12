@@ -3,7 +3,8 @@ import { baseApi } from './baseApi';
 export const petsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getDashboard: builder.query({
-            query: () => '/v1/mascotas',
+            // CAMBIADO: /bff/v1/dashboard → /api/v1/mascotas/dashboard
+            query: () => '/api/v1/mascotas/dashboard',
             transformResponse: (response) => response.map(dto => ({
                 id: dto.idMascota,
                 direccion: dto.direccion,
@@ -23,7 +24,8 @@ export const petsApi = baseApi.injectEndpoints({
             providesTags: ['Pets'],
         }),
         getPetById: builder.query({
-            query: (id) => `/v1/mascotas/${id}`,
+            // CAMBIADO: /bff/v1/mascotas/${id} → /api/v1/mascotas/${id}
+            query: (id) => `/api/v1/mascotas/${id}`,
             transformResponse: (dto) => ({
                 id: dto.idMascota,
                 direccion: dto.direccion,
@@ -43,8 +45,9 @@ export const petsApi = baseApi.injectEndpoints({
             providesTags: (result, error, id) => [{ type: 'Pets', id }],
         }),
         reportPet: builder.mutation({
+            // CAMBIADO: /bff/v1/mascotas → /api/v1/mascotas
             query: (formData) => ({
-                url: '/v1/mascotas',
+                url: '/api/v1/mascotas',
                 method: 'POST',
                 body: formData,
             }),

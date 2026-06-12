@@ -3,7 +3,7 @@ import { baseApi } from './baseApi';
 export const petsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getDashboard: builder.query({
-            query: () => '/v1/dashboard',
+            query: () => '/v1/mascotas',
             transformResponse: (response) => response.map(dto => ({
                 id: dto.idMascota,
                 direccion: dto.direccion,

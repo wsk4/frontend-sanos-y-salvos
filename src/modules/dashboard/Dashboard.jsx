@@ -1,10 +1,16 @@
 import { Typography, Box, Grid, CircularProgress, Alert } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { PetCard } from '../../components/Card/PetCard';
 import { useGetDashboardQuery } from '../../api/petsApi';
 import '../../assets/styles/Dashboard.css';
 
 export const Dashboard = () => {
-  const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
+  const isAuthReady = useSelector((state) => state.auth.isReady);
+
+  const { data: mascotas = [], isLoading, error } = useGetDashboardQuery(
+    undefined,
+    { skip: !isAuthReady }
+  );
 
   return (
     <Box className="dashboard-container">
@@ -27,7 +33,7 @@ export const Dashboard = () => {
         </Typography>
       </Box>
 
-      {isLoading && (
+      {(!isAuthReady || isLoading) && (
         <Box className="dashboard-loading">
           <CircularProgress />
         </Box>
@@ -39,7 +45,7 @@ export const Dashboard = () => {
         </Alert>
       )}
 
-      {!isLoading && !error && (
+      {isAuthReady && !isLoading && !error && (
         <Grid container spacing={3} className="dashboard-grid">
           {mascotas.map((pet) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={pet.id}>

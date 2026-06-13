@@ -19,7 +19,7 @@ import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
 import InfoIcon from '@mui/icons-material/Info';
 
 export const ReportForm = () => {
-  // Lógica funcional intacta
+  // Lógica funcional intacta[cite: 1]
   const [formData, setFormData] = useState({
     nombre: '',
     raza: '',
@@ -51,17 +51,21 @@ export const ReportForm = () => {
     setErrorValidacion(null);
 
     const data = new FormData();
+    
+    // CORRECCIÓN: Se agrega 'direccion' dentro de la estructura JSON principal[cite: 1]
     const mascotaData = {
       nombre: formData.nombre,
       raza: formData.raza,
       color: formData.color,
       tamano: formData.tamano,
       estado: formData.estado,
-      contactoInfo: formData.contactoInfo
+      contactoInfo: formData.contactoInfo,
+      direccion: formData.direccion // <-- La dirección ahora viaja en el DTO
     };
     
     data.append('mascota', JSON.stringify(mascotaData));
-    data.append('direccion', formData.direccion);
+    data.append('direccion', formData.direccion); // Se mantiene también de forma externa por compatibilidad[cite: 1]
+    
     if (formData.foto) {
       data.append('archivo', formData.foto);
     }
@@ -79,7 +83,7 @@ export const ReportForm = () => {
   };
 
   return (
-    <Container maxWidth="sm"> {/* Ajustado a "sm" para que el diseño vertical se vea estilizado */}
+    <Container maxWidth="sm">
       <Paper 
         elevation={4} 
         sx={{ 

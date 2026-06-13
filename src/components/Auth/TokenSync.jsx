@@ -9,7 +9,7 @@ export const TokenSync = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!isLoaded) return; // Clerk todavía inicializando
+        if (!isLoaded) return;
 
         if (!isSignedIn) {
             dispatch(clearToken());
@@ -23,7 +23,6 @@ export const TokenSync = () => {
 
         sync();
 
-        // Refresca cada 50s antes de que el JWT expire (~60s)
         const interval = setInterval(sync, 50 * 1000);
         return () => clearInterval(interval);
 

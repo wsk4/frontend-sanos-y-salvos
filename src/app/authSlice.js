@@ -11,7 +11,7 @@ const authSlice = createSlice({
         },
         clearToken: (state) => {
             state.token = null;
-            state.isReady = true; // también listo, pero sin sesión
+            state.isReady = true;
         },
     },
 });

@@ -1,0 +1,16 @@
+# --- FRONTEND (Servicio Web Público) ---
+  - type: web
+    name: sanos-frontend
+    env: docker
+    repo: https://github.com/tu-usuario/sanos-frontend
+    branch: main
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    # ESTO ES CRÍTICO: Le dice a Render que inyecte los valores DURANTE la compilación del contenedor
+    dockerBuildArgs:
+      - key: VITE_API_BASE_URL
+        value: https://sanos-api-gateway.onrender.com # La URL pública que te dé tu Gateway en Render
+      - key: VITE_CLERK_PUBLISHABLE_KEY
+        value: pk_live_tu_llave_de_produccion_clerk
+    ports:
+      - key: 80

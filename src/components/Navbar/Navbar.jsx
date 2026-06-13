@@ -10,7 +10,6 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     
-    // Hooks para detectar si la pantalla es tamaño 'sm' (móvil, menor a 600px)
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -31,7 +30,6 @@ export const Navbar = () => {
                         alt="Logo de Sanos y Salvos"
                         className="navbar-logo-img"
                     />
-                    {/* Ocultamos el texto del título en pantallas pequeñas para ahorrar espacio */}
                     {!isMobile && <span className="navbar-title">Sanos y Salvos</span>}
                 </Typography>
 
@@ -46,7 +44,6 @@ export const Navbar = () => {
                         className={`navbar-link-button ${isActive('/mapa') ? 'active' : ''}`}
                         onClick={() => navigate('/mapa')}
                     >
-                        {/* Texto dinámico dependiendo del tamaño de pantalla */}
                         {isMobile ? 'Radar' : 'Radar de Huellas'}
                     </Button>
                 </Box>
@@ -58,7 +55,6 @@ export const Navbar = () => {
                             className="navbar-report-button"
                             onClick={() => navigate('/reportar')}
                         >
-                            {/* Texto dinámico */}
                             {isMobile ? 'Reportar' : 'Reportar Mascota'}
                         </Button>
                         <UserButton afterSignOutUrl="/dashboard" />

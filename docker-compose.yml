@@ -1,19 +1,20 @@
+version: '3.8'
+
 services:
   frontend:
-    container_name: sanos_frontend
+    container_name: local-sanos-frontend
     build:
       context: .
       dockerfile: Dockerfile
+      # Pasamos las variables del .env como argumentos de construcción a Docker
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
     ports:
-      - "3000:80"
-    env_file:
-      - .env
-    environment:
-      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
-      - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+      - "${PORT}:80"
     networks:
       - sanos-network
-    restart: always
+    restart: unless-stopped
 
 networks:
   sanos-network:

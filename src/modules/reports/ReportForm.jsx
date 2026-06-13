@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { useReportPetMutation } from '../../api/petsApi';
 
-// Iconos para mejorar la estética
 import PetsIcon from '@mui/icons-material/Pets';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
@@ -18,8 +17,10 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
 import InfoIcon from '@mui/icons-material/Info';
 
+import { reportFormStyles as styles } from './ReportForm.styles';
+
+
 export const ReportForm = () => {
-  // Lógica funcional intacta[cite: 1]
   const [formData, setFormData] = useState({
     nombre: '',
     raza: '',
@@ -34,8 +35,8 @@ export const ReportForm = () => {
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
 
   const navigate = useNavigate();
-  const { getToken } = useAuth(); 
-  const [reportPet, { isLoading }] = useReportPetMutation(); 
+  const { getToken } = useAuth();
+  const [reportPet, { isLoading }] = useReportPetMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,8 +52,7 @@ export const ReportForm = () => {
     setErrorValidacion(null);
 
     const data = new FormData();
-    
-    // CORRECCIÓN: Se agrega 'direccion' dentro de la estructura JSON principal[cite: 1]
+
     const mascotaData = {
       nombre: formData.nombre,
       raza: formData.raza,
@@ -60,12 +60,12 @@ export const ReportForm = () => {
       tamano: formData.tamano,
       estado: formData.estado,
       contactoInfo: formData.contactoInfo,
-      direccion: formData.direccion // <-- La dirección ahora viaja en el DTO
+      direccion: formData.direccion,
     };
-    
+
     data.append('mascota', JSON.stringify(mascotaData));
-    data.append('direccion', formData.direccion); // Se mantiene también de forma externa por compatibilidad[cite: 1]
-    
+    data.append('direccion', formData.direccion);
+
     if (formData.foto) {
       data.append('archivo', formData.foto);
     }
@@ -84,42 +84,34 @@ export const ReportForm = () => {
 
   return (
     <Container maxWidth="sm">
-      <Paper 
-        elevation={4} 
-        sx={{ 
-          mt: 6, 
-          mb: 6, 
-          p: { xs: 3, md: 5 }, 
-          borderRadius: 4, 
-          bgcolor: 'white' 
-        }}
-      >
-        <Typography 
-          variant="h4" 
-          align="center" 
-          color="primary" 
-          fontWeight="800" 
+      <Paper elevation={4} sx={styles.paper}>
+
+        <Typography
+          variant="h4"
+          align="center"
+          color="primary"
+          fontWeight="800"
           gutterBottom
-          sx={{ mb: 4 }}
+          sx={styles.title}
         >
           Reporte de Mascotas
         </Typography>
-        
+
         {guardadoExitoso && (
-          <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }}>
+          <Alert severity="success" sx={styles.alert}>
             ¡Reporte creado exitosamente! Redirigiendo al dashboard...
           </Alert>
         )}
-        
+
         {errorValidacion && (
-          <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
+          <Alert severity="error" sx={styles.alert}>
             {errorValidacion}
           </Alert>
         )}
-        
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            
+
             {/* Nombre */}
             <Grid item xs={12}>
               <TextField
@@ -187,7 +179,7 @@ export const ReportForm = () => {
                   onChange={handleChange}
                   startAdornment={
                     <InputAdornment position="start">
-                      <MonitorWeightIcon color="action" sx={{ ml: 1 }}/>
+                      <MonitorWeightIcon color="action" sx={styles.selectAdornmentIcon} />
                     </InputAdornment>
                   }
                 >
@@ -209,7 +201,7 @@ export const ReportForm = () => {
                   onChange={handleChange}
                   startAdornment={
                     <InputAdornment position="start">
-                      <InfoIcon color="action" sx={{ ml: 1 }}/>
+                      <InfoIcon color="action" sx={styles.selectAdornmentIcon} />
                     </InputAdornment>
                   }
                 >
@@ -259,17 +251,7 @@ export const ReportForm = () => {
 
             {/* Foto */}
             <Grid item xs={12}>
-              <Box 
-                sx={{ 
-                  p: 3, 
-                  border: '2px dashed #ccc', 
-                  borderRadius: 2, 
-                  textAlign: 'center',
-                  bgcolor: '#fafafa',
-                  transition: '0.3s',
-                  '&:hover': { borderColor: 'primary.main', bgcolor: '#f0f7ff' }
-                }}
-              >
+              <Box sx={styles.photoBox}>
                 <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                   Sube una foto clara de la mascota
                 </Typography>
@@ -277,15 +259,15 @@ export const ReportForm = () => {
                   component="label"
                   variant="outlined"
                   startIcon={<CloudUploadIcon />}
-                  sx={{ mt: 1, textTransform: 'none', borderRadius: 2 }}
+                  sx={styles.photoButton}
                 >
-                  {formData.foto ? formData.foto.name : "Seleccionar Imagen"}
+                  {formData.foto ? formData.foto.name : 'Seleccionar Imagen'}
                   <input
                     type="file"
                     accept="image/*"
                     hidden
                     onChange={handleFileChange}
-                    required={!formData.foto} 
+                    required={!formData.foto}
                   />
                 </Button>
               </Box>
@@ -301,13 +283,7 @@ export const ReportForm = () => {
                 size="large"
                 disabled={isLoading}
                 startIcon={!isLoading && <CampaignIcon />}
-                sx={{ 
-                  py: 1.5, 
-                  fontSize: '1.1rem', 
-                  fontWeight: 'bold',
-                  borderRadius: 2,
-                  boxShadow: 3
-                }}
+                sx={styles.submitButton}
               >
                 {isLoading ? <CircularProgress size={28} color="inherit" /> : 'Emitir Alerta'}
               </Button>

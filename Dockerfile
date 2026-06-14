@@ -1,20 +1,33 @@
-#build
-FROM node:20-alpine as build
-WORKDIR /app
-# Copiamos dependencias e instalamos
-COPY package*.json ./
-RUN npm install
-# Copiamos el resto del código y compilamos con Vite
-COPY . .
-RUN npm run build
+# ==========================================
+# Fase 1: Build (Compilación con Argumentos)
+# ==========================================
+FROM node:20-alpine AS build
 
-#parte 2 nginx
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Declaramos los argumentos que Vite necesita recibir para la compilación
+ARG VITE_API_BASE_URL
+ARG VITE_CLERK_PUBLISHABLE_KEY
+
+# Los convertimos en variables de entorno temporales para que el comando 'build' los lea
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
+
+COPY . .
+RUN pnpm run build
+
+# ==========================================
+# Fase 2: Runtime (Nginx Servidor de Estáticos)
+# ==========================================
 FROM nginx:alpine
 
-# Copiamos la configuración personalizada de Nginx
+# Copiar configuración customizada de Nginx (Esencial para Single Page Apps / Routing)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copiamos la carpeta 'dist' generada en la Etapa 1 al servidor web
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80

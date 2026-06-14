@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
-import { Container, Typography, Box, Paper, CircularProgress, Chip } from '@mui/material';
+import {Container,Typography,Box,Paper,CircularProgress,Chip,Alert} from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useGetDashboardQuery } from '../../api/petsApi';
 import { fixLeafletIcon, pawIcon } from '../../utils/mapUtils';
 import { formatImageBytes } from '../../utils/imageUtils';
 import 'leaflet/dist/leaflet.css';
+import '../../assets/styles/MapView.css';
 
 export const MapView = () => {
-  const { data: mascotas = [], isLoading, error } = useGetDashboardQuery();
+  const { data: mascotas = [], isLoading, error} = useGetDashboardQuery();
 
   useEffect(() => {
     fixLeafletIcon();
@@ -15,63 +16,106 @@ export const MapView = () => {
 
   const defaultPosition = [-33.4489, -70.6693];
 
-  const firstValidPet = mascotas.find(m => m.geolocalizacion?.latitud || m.geolocalizacion?.lat);
+  const mascotasConCoordenadas = mascotas.filter((m) => {
+    const geo = m.geolocalizacion;
+    if (!geo) return false;
+
+    const lat = geo.latitud ?? geo.lat;
+    const lng = geo.longitud ?? geo.lon ?? geo.lng;
+
+    return lat != null && lng != null;
+  });
+
+  const firstValidPet = mascotasConCoordenadas[0];
+
   const centerPosition = firstValidPet
-    ? [firstValidPet.geolocalizacion.latitud || firstValidPet.geolocalizacion.lat,
-    firstValidPet.geolocalizacion.longitud || firstValidPet.geolocalizacion.lon]
+    ? [
+        firstValidPet.geolocalizacion.latitud ?? firstValidPet.geolocalizacion.lat,
+        firstValidPet.geolocalizacion.longitud ??
+          firstValidPet.geolocalizacion.lon ??
+          firstValidPet.geolocalizacion.lng
+      ]
     : defaultPosition;
 
-  if (isLoading) return <Box display="flex" justifyContent="center" py={10}><CircularProgress /></Box>;
+  if (isLoading) {
+    return (
+      <Box className="mapview-loading">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 2 }}>
-      <Box mb={2}>
-        <Typography variant="h5" color="primary" fontWeight="bold">📍 Radar de Huellas</Typography>
-        <Typography variant="caption" color="text.secondary">Mascotas reportadas cerca de tu ubicación.</Typography>
+    <Container maxWidth="lg" className="mapview-container">
+      <Box className="mapview-header">
+        <Typography variant="h5" color="primary" fontWeight="bold" className="mapview-title">
+          Radar de Huellas
+        </Typography>
+        <Typography variant="caption" color="text.secondary" className="mapview-subtitle">
+          Mascotas reportadas cerca de tu ubicación.
+        </Typography>
       </Box>
 
-      <Paper elevation={2} sx={{ height: '60vh', borderRadius: 4, overflow: 'hidden', border: '1px solid #eee' }}>
+      {error && (
+        <Box className="mapview-error-box">
+          <Alert severity="warning" className="mapview-alert">
+            No pudimos conectarnos con el servidor para cargar los reportes.
+          </Alert>
+        </Box>
+      )}
+
+      {!error && mascotasConCoordenadas.length === 0 && (
+        <Alert severity="info" className="mapview-alert">
+          No hay reportes con ubicación disponible para mostrar en el mapa por ahora.
+        </Alert>
+      )}
+
+      <Paper elevation={2} className="mapview-paper">
         <MapContainer
           center={centerPosition}
           zoom={13}
-          style={{ height: '100%', width: '100%', zIndex: 1 }}
+          className="mapview-map"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          {mascotas.map((item) => {
-            const geo = item.geolocalizacion;
-            if (!geo) return null;
+          {!error &&
+            mascotasConCoordenadas.map((item) => {
+              const geo = item.geolocalizacion;
+              const lat = geo.latitud ?? geo.lat;
+              const lng = geo.longitud ?? geo.lon ?? geo.lng;
 
-            const lat = geo.latitud || geo.lat;
-            const lng = geo.longitud || geo.lon || geo.lng;
+              return (
+                <Marker key={item.id} position={[lat, lng]} icon={pawIcon}>
+                  <Popup>
+                    <Box className="mapview-popup">
+                      <img
+                        src={formatImageBytes(item.mascota?.fotoBytes)}
+                        alt={item.mascota?.nombre}
+                        className="mapview-popup-image"
+                      />
 
-            if (!lat || !lng) return null;
+                      <Typography variant="subtitle2" fontWeight="bold">
+                        {item.mascota?.nombre}
+                      </Typography>
 
-            return (
-              <Marker key={item.id} position={[lat, lng]} icon={pawIcon}>
-                <Popup>
-                  <Box sx={{ textAlign: 'center', width: 140 }}>
-                    <img
-                      src={formatImageBytes(item.mascota?.fotoBytes)}
-                      alt={item.mascota?.nombre}
-                      style={{ width: '100%', borderRadius: '8px', marginBottom: '8px' }}
-                    />
-                    <Typography variant="subtitle2" fontWeight="bold">{item.mascota?.nombre}</Typography>
-                    <Chip
-                      label={item.mascota?.estado}
-                      size="small"
-                      color={item.mascota?.estado === 'PERDIDA' ? 'error' : 'success'}
-                      sx={{ height: 20, fontSize: '10px', my: 1 }}
-                    />
-                    <Typography variant="caption" display="block">{item.direccion}</Typography>
-                  </Box>
-                </Popup>
-              </Marker>
-            );
-          })}
+                      <Chip
+                        label={item.mascota?.estado}
+                        size="small"
+                        color={item.mascota?.estado === 'PERDIDA' ? 'error' : 'success'}
+                        className="mapview-popup-chip"
+                      />
+
+                      <Typography variant="caption" display="block">
+                        {item.direccion}
+                      </Typography>
+                    </Box>
+                  </Popup>
+                </Marker>
+              );
+            })}
         </MapContainer>
       </Paper>
     </Container>

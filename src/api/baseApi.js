@@ -13,6 +13,7 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Pet', 'Location'],
+  tagTypes: ['Pets', 'Maps', 'Location'],
+  
   endpoints: () => ({}),
 });

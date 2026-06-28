@@ -1,6 +1,6 @@
 export const reportFormStyles = {
   paper: {
-    mt: 8,
+    mt: 6,
     mb: 6,
     p: { xs: 3, md: 5 },
     borderRadius: 4,
@@ -8,7 +8,7 @@ export const reportFormStyles = {
   },
 
   title: {
-    mb: 3,
+    mb: 4,
   },
 
   alert: {
@@ -17,7 +17,7 @@ export const reportFormStyles = {
   },
 
   photoBox: {
-    p: 4,
+    p: 3,
     border: '2px dashed #ccc',
     borderRadius: 2,
     textAlign: 'center',

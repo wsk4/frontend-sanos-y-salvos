@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { petCardStyles as styles } from './PetCard.styles';
 
 export const PetCard = ({ pet }) => {
-    const { id, mascota, geolocalizacion, direccion } = pet;
+    const { id, mascota, direccion } = pet;
     const isLost = mascota?.estado === 'PERDIDA';
 
     return (
@@ -41,11 +41,6 @@ export const PetCard = ({ pet }) => {
                         <Typography variant="body2" sx={styles.address}>
                             {direccion || 'Dirección'}
                         </Typography>
-                        {geolocalizacion && (
-                            <Typography variant="caption" color="text.disabled" sx={styles.coordinates}>
-                                {geolocalizacion.latitud.toFixed(5)}, {geolocalizacion.longitud.toFixed(5)}
-                            </Typography>
-                        )}
                     </Box>
                 </Box>
 

@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import {
-  Button, Container, TextField, Typography, MenuItem, Select,
-  InputLabel, FormControl, Alert, CircularProgress, Grid, Paper, InputAdornment, Box
-} from '@mui/material';
+import {Button,Container,TextField,Typography,MenuItem,Alert,CircularProgress,Stack,Paper,InputAdornment,Box} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { useReportPetMutation } from '../../api/petsApi';
@@ -14,11 +11,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import BadgeIcon from '@mui/icons-material/Badge';
-import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
-import InfoIcon from '@mui/icons-material/Info';
 
 import { reportFormStyles as styles } from './ReportForm.styles';
-
 
 export const ReportForm = () => {
   const [formData, setFormData] = useState({
@@ -31,6 +25,7 @@ export const ReportForm = () => {
     direccion: '',
     foto: null
   });
+
   const [errorValidacion, setErrorValidacion] = useState(null);
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
 
@@ -75,9 +70,10 @@ export const ReportForm = () => {
       setGuardadoExitoso(true);
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (error) {
-      const mensaje = error?.data?.mensaje
-        ?? error?.data?.message
-        ?? 'Error al enviar el reporte.';
+      const mensaje =
+        error?.data?.mensaje ??
+        error?.data?.message ??
+        'Error al enviar el reporte.';
       setErrorValidacion(mensaje);
     }
   };
@@ -85,7 +81,6 @@ export const ReportForm = () => {
   return (
     <Container maxWidth="sm">
       <Paper elevation={4} sx={styles.paper}>
-
         <Typography
           variant="h4"
           align="center"
@@ -99,7 +94,7 @@ export const ReportForm = () => {
 
         {guardadoExitoso && (
           <Alert severity="success" sx={styles.alert}>
-            ¡Reporte creado exitosamente! Redirigiendo al dashboard...
+            ¡Reporte creado exitosamente! Redirigiendo al inicio...
           </Alert>
         )}
 
@@ -110,186 +105,163 @@ export const ReportForm = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-
-            {/* Nombre */}
-            <Grid item xs={12}>
-              <TextField
-                label="Nombre de la Mascota"
-                fullWidth
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-                InputProps={{
+          <Stack spacing={1}>
+            <TextField
+              label="Nombre de la Mascota"
+              fullWidth
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              required
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <BadgeIcon color="action" />
                     </InputAdornment>
                   ),
-                }}
-              />
-            </Grid>
+                },
+              }}
+            />
 
-            {/* Raza */}
-            <Grid item xs={12}>
-              <TextField
-                label="Raza"
-                fullWidth
-                name="raza"
-                value={formData.raza}
-                onChange={handleChange}
-                required
-                InputProps={{
+            <TextField
+              label="Raza"
+              fullWidth
+              name="raza"
+              value={formData.raza}
+              onChange={handleChange}
+              required
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <PetsIcon color="action" />
                     </InputAdornment>
                   ),
-                }}
-              />
-            </Grid>
+                },
+              }}
+            />
 
-            {/* Color */}
-            <Grid item xs={12}>
-              <TextField
-                label="Color"
-                fullWidth
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                InputProps={{
+            <TextField
+              label="Color"
+              fullWidth
+              name="color"
+              value={formData.color}
+              onChange={handleChange}
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <PaletteIcon color="action" />
                     </InputAdornment>
                   ),
-                }}
-              />
-            </Grid>
+                },
+              }}
+            />
 
-            {/* Tamaño */}
-            <Grid item xs={12}>
-              <FormControl fullWidth required>
-                <InputLabel>Tamaño</InputLabel>
-                <Select
-                  name="tamano"
-                  value={formData.tamano}
-                  label="Tamaño"
-                  onChange={handleChange}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <MonitorWeightIcon color="action" sx={styles.selectAdornmentIcon} />
-                    </InputAdornment>
-                  }
-                >
-                  <MenuItem value="PEQUEÑO">Pequeño</MenuItem>
-                  <MenuItem value="MEDIANO">Mediano</MenuItem>
-                  <MenuItem value="GRANDE">Grande</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <TextField
+              select
+              label="Tamaño"
+              fullWidth
+              name="tamano"
+              value={formData.tamano}
+              onChange={handleChange}
+              required
+            >
+              <MenuItem value="PEQUEÑO">Pequeño</MenuItem>
+              <MenuItem value="MEDIANO">Mediano</MenuItem>
+              <MenuItem value="GRANDE">Grande</MenuItem>
+            </TextField>
 
-            {/* Estado */}
-            <Grid item xs={12}>
-              <FormControl fullWidth required>
-                <InputLabel>Estado</InputLabel>
-                <Select
-                  name="estado"
-                  value={formData.estado}
-                  label="Estado"
-                  onChange={handleChange}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <InfoIcon color="action" sx={styles.selectAdornmentIcon} />
-                    </InputAdornment>
-                  }
-                >
-                  <MenuItem value="PERDIDA">Perdida</MenuItem>
-                  <MenuItem value="ENCONTRADA">Encontrada</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <TextField
+              select
+              label="Estado"
+              fullWidth
+              name="estado"
+              value={formData.estado}
+              onChange={handleChange}
+              required
+            >
+              <MenuItem value="PERDIDA">Perdida</MenuItem>
+              <MenuItem value="ENCONTRADA">Encontrada</MenuItem>
+            </TextField>
 
-            {/* Contacto */}
-            <Grid item xs={12}>
-              <TextField
-                label="Contacto (Teléfono / Email)"
-                fullWidth
-                name="contactoInfo"
-                value={formData.contactoInfo}
-                onChange={handleChange}
-                required
-                InputProps={{
+            <TextField
+              label="Contacto (Teléfono / Email)"
+              fullWidth
+              name="contactoInfo"
+              value={formData.contactoInfo}
+              onChange={handleChange}
+              required
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <ContactPhoneIcon color="action" />
                     </InputAdornment>
                   ),
-                }}
-              />
-            </Grid>
+                },
+              }}
+            />
 
-            {/* Dirección */}
-            <Grid item xs={12}>
-              <TextField
-                label="Dirección donde fue visto"
-                fullWidth
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleChange}
-                required
-                InputProps={{
+            <TextField
+              label="Dirección donde fue visto"
+              fullWidth
+              name="direccion"
+              value={formData.direccion}
+              onChange={handleChange}
+              required
+              slotProps={{
+                input: {
                   startAdornment: (
                     <InputAdornment position="start">
                       <LocationOnIcon color="error" />
                     </InputAdornment>
                   ),
-                }}
-              />
-            </Grid>
+                },
+              }}
+            />
 
-            {/* Foto */}
-            <Grid item xs={12}>
-              <Box sx={styles.photoBox}>
-                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                  Sube una foto clara de la mascota
-                </Typography>
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<CloudUploadIcon />}
-                  sx={styles.photoButton}
-                >
-                  {formData.foto ? formData.foto.name : 'Seleccionar Imagen'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleFileChange}
-                    required={!formData.foto}
-                  />
-                </Button>
-              </Box>
-            </Grid>
+            <Box sx={styles.photoBox}>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Sube una foto clara de la mascota
+              </Typography>
 
-            {/* Botón Submit */}
-            <Grid item xs={12}>
               <Button
-                type="submit"
-                variant="contained"
-                color="primary"
+                component="label"
+                variant="outlined"
+                startIcon={<CloudUploadIcon />}
+                sx={styles.photoButton}
                 fullWidth
-                size="large"
-                disabled={isLoading}
-                startIcon={!isLoading && <CampaignIcon />}
-                sx={styles.submitButton}
               >
-                {isLoading ? <CircularProgress size={28} color="inherit" /> : 'Emitir Alerta'}
+                {formData.foto ? formData.foto.name : 'Seleccionar Imagen'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleFileChange}
+                  required={!formData.foto}
+                />
               </Button>
-            </Grid>
+            </Box>
 
-          </Grid>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
+              disabled={isLoading}
+              startIcon={!isLoading && <CampaignIcon />}
+              sx={styles.submitButton}
+            >
+              {isLoading ? (
+                <CircularProgress size={28} color="inherit" />
+              ) : (
+                'Emitir Alerta'
+              )}
+            </Button>
+          </Stack>
         </form>
       </Paper>
     </Container>

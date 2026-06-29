@@ -50,11 +50,22 @@ export const petsApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['Pets'],
         }),
+        updatePetStatus: builder.mutation({
+            query: ({ id, estado }) => ({
+                url: `/api/v1/mascotas/${id}`,
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: { estado },
+            }),
+            invalidatesTags: (result, error, { id }) => [{ type: 'Pets', id }, 'Pets'],
+        }),
     }),
 });
+
 
 export const {
     useGetDashboardQuery,
     useGetPetByIdQuery,
-    useReportPetMutation
+    useReportPetMutation,
+    useUpdatePetStatusMutation,
 } = petsApi;

@@ -1,4 +1,3 @@
-// src/components/Auth/TokenSync.jsx
 import { useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { useDispatch } from 'react-redux';
